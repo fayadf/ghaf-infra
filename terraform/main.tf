@@ -100,15 +100,18 @@ locals {
   # E.g. 'Standard_D2_v3' means: 2 vCPU, 8 GiB RAM
   opts = {
     priv = {
-      persistent_id          = "priv"
-      vm_size_builder_x86    = "Standard_D2_v5"
-      osdisk_size_builder    = "150"
-      vm_size_controller     = "Standard_E4_v5"
-      osdisk_size_controller = "150"
-      num_builders_x86       = 0
-      num_builders_aarch64   = 0
-      ext_builder_machines   = local.ext_builder_machines
-      ext_builder_keyscan    = local.ext_builder_keyscan
+      persistent_id           = "priv"
+      vm_size_binarycache     = "Standard_D2_v5"
+      osdisk_size_binarycache = "50"
+      vm_size_builder_x86     = "Standard_D2_v5"
+      vm_size_builder_aarch64 = "Standard_D2ps_v5"
+      osdisk_size_builder     = "150"
+      vm_size_controller      = "Standard_E4_v5"
+      osdisk_size_controller  = "150"
+      num_builders_x86        = 0
+      num_builders_aarch64    = 0
+      ext_builder_machines    = local.ext_builder_machines
+      ext_builder_keyscan     = local.ext_builder_keyscan
     }
     dev = {
       persistent_id           = "prod"
@@ -203,7 +206,7 @@ data "azurerm_virtual_network" "s2s-vnet" {
 # Virtual network
 resource "azurerm_virtual_network" "vnet" {
   name                = "ghaf-infra-vnet"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.3.0.0/16"]
   location            = azurerm_resource_group.infra.location
   resource_group_name = azurerm_resource_group.infra.name
 }
@@ -213,7 +216,7 @@ resource "azurerm_subnet" "jenkins" {
   name                 = "ghaf-infra-jenkins"
   resource_group_name  = azurerm_resource_group.infra.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = ["10.3.2.0/24"]
 }
 
 # Slice out a subnet for the builders
@@ -221,13 +224,13 @@ resource "azurerm_subnet" "builders" {
   name                 = "ghaf-infra-builders"
   resource_group_name  = azurerm_resource_group.infra.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.4.0/28"]
+  address_prefixes     = ["10.3.4.0/28"]
 }
 
 # Peering ghaf-infra-vnet to s2s gateway vnet for connectivity with Tampere
 
-resource "azurerm_virtual_network_peering" "ghaf-infra-vnet" {
-  name                         = "ghaf-infra-vnet-to-s2s-vnet"
+resource "azurerm_virtual_network_peering" "ghaf-infra-vnet-fayad" {
+  name                         = "ghaf-infra-vnet-fayad-to-s2s-vnet"
   resource_group_name          = azurerm_resource_group.infra.name
   virtual_network_name         = azurerm_virtual_network.vnet.name
   remote_virtual_network_id    = data.azurerm_virtual_network.s2s-vnet.id
@@ -237,8 +240,8 @@ resource "azurerm_virtual_network_peering" "ghaf-infra-vnet" {
   use_remote_gateways          = true
 }
 
-resource "azurerm_virtual_network_peering" "s2s-vnet-to-ghaf-infra-vnet" {
-  name                         = "s2s-vnet-to-ghaf-infra-vnet"
+resource "azurerm_virtual_network_peering" "s2s-vnet" {
+  name                         = "s2s-vnet-to-ghaf-infra-vnet-fayad"
   resource_group_name          = data.azurerm_virtual_network.s2s-vnet.resource_group_name
   virtual_network_name         = data.azurerm_virtual_network.s2s-vnet.name
   remote_virtual_network_id    = azurerm_virtual_network.vnet.id
