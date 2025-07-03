@@ -129,7 +129,7 @@ locals {
     }
     prod = {
       persistent_id           = "prod"
-      vm_size_binarycache     = "Standard_D4_v5"
+      vm_size_binarycache     = "Standard_D4_v3"
       osdisk_size_binarycache = "250"
       vm_size_builder_x86     = "Standard_D16_v5"
       vm_size_builder_aarch64 = "Standard_D8ps_v5"
@@ -193,12 +193,20 @@ resource "azurerm_resource_group" "infra" {
 
 ################################################################################
 
+# Virtual network of S2S gateway
+data "azurerm_virtual_network" "s2s-vnet" {
+  name                = "ghaf-infra-s2s-vnet"
+  resource_group_name = "ghaf-infra-s2s-rg"
+}
+
+################################################################################
+
 # Environment specific resources
 
 # Virtual network
 resource "azurerm_virtual_network" "vnet" {
   name                = "ghaf-infra-vnet"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.3.0.0/16"]
   location            = azurerm_resource_group.infra.location
   resource_group_name = azurerm_resource_group.infra.name
 }
@@ -208,7 +216,7 @@ resource "azurerm_subnet" "jenkins" {
   name                 = "ghaf-infra-jenkins"
   resource_group_name  = azurerm_resource_group.infra.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = ["10.3.2.0/24"]
 }
 
 # Slice out a subnet for the builders
@@ -216,8 +224,33 @@ resource "azurerm_subnet" "builders" {
   name                 = "ghaf-infra-builders"
   resource_group_name  = azurerm_resource_group.infra.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.4.0/28"]
+  address_prefixes     = ["10.3.4.0/28"]
 }
+
+# Peering ghaf-infra-vnet to s2s gateway vnet for connectivity with Tampere
+
+resource "azurerm_virtual_network_peering" "ghaf-infra-vnet-fayad" {
+  name                         = "ghaf-infra-vnet-to-s2s-vnet"
+  resource_group_name          = azurerm_resource_group.infra.name
+  virtual_network_name         = azurerm_virtual_network.vnet.name
+  remote_virtual_network_id    = data.azurerm_virtual_network.s2s-vnet.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+  use_remote_gateways          = true
+}
+
+resource "azurerm_virtual_network_peering" "ghaf-infra-s2s-vnet" {
+  name                         = "s2s-vnet-to-ghaf-infra-vnet-fayad"
+  resource_group_name          = data.azurerm_virtual_network.s2s-vnet.resource_group_name
+  virtual_network_name         = data.azurerm_virtual_network.s2s-vnet.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
+  use_remote_gateways          = false
+}
+
 
 # https://github.com/hashicorp/terraform-provider-azurerm/issues/15609
 resource "random_string" "id" {
