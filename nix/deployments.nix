@@ -43,6 +43,7 @@ let
     hetzci-dev = mkDeployment "hetzci-dev" machines.hetzci-dev.ip;
     hetz86-1 = mkDeployment "hetz86-1" machines.hetz86-1.ip;
     hetz86-builder = mkDeployment "hetz86-builder" machines.hetz86-builder.ip;
+    uae-lab-node1 = mkDeployment "uae-lab-node1" machines.uae-lab-node1.ip;
   };
 
   aarch64-nodes = {
