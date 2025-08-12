@@ -114,7 +114,7 @@
   };
 
   outputs =
-    inputs@{ flake-parts, nixpkgs, ... }:
+    inputs@{ flake-parts, nixpkgs, nixpkgs-unstable, ... }:
     flake-parts.lib.mkFlake
       {
         inherit inputs;

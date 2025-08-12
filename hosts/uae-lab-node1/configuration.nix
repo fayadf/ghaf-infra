@@ -6,6 +6,7 @@
   inputs,
   modulesPath,
   lib,
+  config,
   ...
 }:
 {
@@ -21,6 +22,7 @@
       user-bmg
       user-fayad
     ]);
+
 
   users.groups.tsusers = { };
   sops = {
@@ -57,23 +59,30 @@
     dmidecode
     pciutils
     dnsutils
+    inetutils
+    wget
+    openssl
+    nix-info
   ];
 
-  # RDP server configurations
-  services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+   
 
-  services.xrdp.enable = true;
-  services.xrdp.defaultWindowManager = "startplasma-x11";
-  services.xrdp.openFirewall = true;
-  networking.firewall.allowedTCPPorts = [ 3389 8080 ];
+  # RDP server configurations
+#  services.xserver.enable = true;
+#  services.displayManager.sddm.enable = true;
+#  services.desktopManager.plasma6.enable = true;
+
+ # services.xrdp.enable = true;
+ # services.xrdp.defaultWindowManager = "startplasma-x11";
+ # services.xrdp.openFirewall = true;
+  networking.firewall.allowedTCPPorts = [ 3389 8080 4822 ];
+
 
   services.guacamole-server = {
   enable = true;
   host = "127.0.0.1";
   userMappingXml = ./user-mapping.xml;
-  # package = pkgs.unstable.guacamole-server; # Optional, use only when you want to use the unstable channel
+  package = (import inputs.nixpkgs-unstable { inherit (pkgs) system; }).guacamole-server;
   };
 
   services.guacamole-client = {
@@ -84,6 +93,7 @@
       guacd-hostname = "127.0.0.1";
       auth-provider = "net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider";
       basic-user-mapping = "/etc/guacamole/user-mapping.xml";
+      enable-rdp = true;
     };
   };
 }

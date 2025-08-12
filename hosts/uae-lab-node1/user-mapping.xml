@@ -3,19 +3,22 @@
     <!-- User using SHA-256 to hash the password -->
     <authorize
         username="fayad"
-        password=""
-        >
+	password="4eac81f00de6ccc2154e97d8e6ee66770ee2f64c84cf0d497af503e0a229fba6"
+        encoding="sha256">
 
-        <connection name="NixOS Server SSH">
+
+        <connection name="Hetzner NixOS Server">
             <protocol>ssh</protocol>
-            <param name="hostname">127.0.0.1</param>
+            <param name="hostname">91.99.96.123</param>
             <param name="port">22</param>
         </connection>
 
-      <connection name="NixOS Server RDP">
+      <connection name="Azure Dev DC">
           <protocol>rdp</protocol>
-          <param name="hostname">127.0.0.1</param>
-          <param name="port">3389</param>
+          <param name="hostname">74.162.66.71</param>
+	  <param name="port">3389</param>
+	  <param name="username">fayad</param>
+	  <param name="password"></param>
           <param name="ignore-cert">true</param>
       </connection>
     </authorize>
