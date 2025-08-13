@@ -96,4 +96,17 @@
       enable-rdp = true;
     };
   };
+  
+ system.activationScripts.copy-jar = ''
+   source ${config.system.build.setEnvironment}
+   if [ ! -d "/etc/guacamole/extensions" ];
+   then 
+	mkdir -p /etc/guacamole/extensions && cd /etc/guacamole
+        wget -O ./guacamole-auth-sso-1.6.0.tar.gz https://apache.org/dyn/closer.lua/guacamole/1.6.0/binary/guacamole-auth-sso-1.6.0.tar.gz?action=download
+        tar -xvzf ./guacamole-auth-sso-1.6.0.tar.gz
+   	mv ./guacamole-auth-sso-1.6.0/openid/guacamole-auth-sso-openid-1.6.0.jar ./extensions/ 
+   	rm -rf /etc/guacamole/guacamole-auth-sso-1.6.0
+   fi
+ '';
+
 }
