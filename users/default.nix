@@ -22,5 +22,6 @@
 
     team-devenv = import ./teams/devenv.nix;
     team-testers = import ./teams/testers.nix;
+    team-profilence = import ./teams/profilence.nix;
   };
 }

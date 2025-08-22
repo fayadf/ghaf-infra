@@ -27,7 +27,8 @@ let
       inherit specialArgs;
       modules = [
         self.nixosModules."nixos-${systemName}"
-      ] ++ lib.optional (extraConfig != null) extraConfig;
+      ]
+      ++ lib.optional (extraConfig != null) extraConfig;
     };
 in
 {
@@ -57,6 +58,7 @@ in
     nixos-testagent-dev = ./testagent/dev/configuration.nix;
     nixos-testagent-release = ./testagent/release/configuration.nix;
     nixos-ghaf-log = ./ghaf-log/configuration.nix;
+    nixos-ghaf-coverity = ./ghaf-coverity/configuration.nix;
     nixos-ghaf-proxy = ./ghaf-proxy/configuration.nix;
     nixos-ghaf-webserver = ./ghaf-webserver/configuration.nix;
     nixos-ghaf-auth = ./ghaf-auth/configuration.nix;
@@ -98,6 +100,7 @@ in
           "testagent-dev"
           "testagent-release"
           "ghaf-log"
+          "ghaf-coverity"
           "ghaf-proxy"
           "ghaf-webserver"
           "ghaf-auth"

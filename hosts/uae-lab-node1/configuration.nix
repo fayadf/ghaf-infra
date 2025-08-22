@@ -10,19 +10,18 @@
   ...
 }:
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      (modulesPath + "/profiles/qemu-guest.nix")
-      inputs.sops-nix.nixosModules.sops
-    ]
-    ++ (with self.nixosModules; [
-      common
-      service-openssh
-      user-bmg
-      user-fayad
-    ]);
-
+  imports = [
+    ./hardware-configuration.nix
+    (modulesPath + "/profiles/qemu-guest.nix")
+    inputs.sops-nix.nixosModules.sops
+  ]
+  ++ (with self.nixosModules; [
+    common
+    service-openssh
+    user-bmg
+    user-fayad
+    team-profilence
+  ]);
 
   users.groups.tsusers = { };
   sops = {
@@ -63,26 +62,28 @@
     wget
     openssl
     nix-info
+    nebula
   ];
 
-   
-
   # RDP server configurations
-#  services.xserver.enable = true;
-#  services.displayManager.sddm.enable = true;
-#  services.desktopManager.plasma6.enable = true;
+  #  services.xserver.enable = true;
+  #  services.displayManager.sddm.enable = true;
+  #  services.desktopManager.plasma6.enable = true;
 
- # services.xrdp.enable = true;
- # services.xrdp.defaultWindowManager = "startplasma-x11";
- # services.xrdp.openFirewall = true;
-  networking.firewall.allowedTCPPorts = [ 3389 8080 4822 ];
-
+  # services.xrdp.enable = true;
+  # services.xrdp.defaultWindowManager = "startplasma-x11";
+  # services.xrdp.openFirewall = true;
+  networking.firewall.allowedTCPPorts = [
+    3389
+    8080
+    4822
+  ];
 
   services.guacamole-server = {
-  enable = true;
-  host = "127.0.0.1";
-  userMappingXml = ./user-mapping.xml;
-  package = (import inputs.nixpkgs-unstable { inherit (pkgs) system; }).guacamole-server;
+    enable = true;
+    host = "127.0.0.1";
+    userMappingXml = ./user-mapping.xml;
+    package = (import inputs.nixpkgs-unstable { inherit (pkgs) system; }).guacamole-server;
   };
 
   services.guacamole-client = {
@@ -96,17 +97,71 @@
       enable-rdp = true;
     };
   };
-  
- system.activationScripts.copy-jar = ''
-   source ${config.system.build.setEnvironment}
-   if [ ! -d "/etc/guacamole/extensions" ];
-   then 
-	mkdir -p /etc/guacamole/extensions && cd /etc/guacamole
-        wget -O ./guacamole-auth-sso-1.6.0.tar.gz https://apache.org/dyn/closer.lua/guacamole/1.6.0/binary/guacamole-auth-sso-1.6.0.tar.gz?action=download
-        tar -xvzf ./guacamole-auth-sso-1.6.0.tar.gz
-   	mv ./guacamole-auth-sso-1.6.0/openid/guacamole-auth-sso-openid-1.6.0.jar ./extensions/ 
-   	rm -rf /etc/guacamole/guacamole-auth-sso-1.6.0
-   fi
- '';
 
+  system.activationScripts.copy-jar = ''
+       source ${config.system.build.setEnvironment}
+       if [ ! -d "/etc/guacamole/extensions" ];
+       then 
+    	mkdir -p /etc/guacamole/extensions && cd /etc/guacamole
+            wget -O ./guacamole-auth-sso-1.6.0.tar.gz https://apache.org/dyn/closer.lua/guacamole/1.6.0/binary/guacamole-auth-sso-1.6.0.tar.gz?action=download
+            tar -xvzf ./guacamole-auth-sso-1.6.0.tar.gz
+       	mv ./guacamole-auth-sso-1.6.0/openid/guacamole-auth-sso-openid-1.6.0.jar ./extensions/ 
+       	rm -rf /etc/guacamole/guacamole-auth-sso-1.6.0
+       fi
+  '';
+
+  # services.oauth2-proxy = {
+  #    enable = true;
+  #    clientID = "uae-lab-node1";
+  #    clientSecret = null;
+  #    cookie.secret = null;
+  #    provider = "oidc";
+  #    oidcIssuerUrl = "https://auth.vedenemo.dev";
+  #    setXauthrequest = true;
+  #    cookie.secure = false;
+  #    extraConfig = {
+  #      email-domain = "*";
+  #      auth-logging = true;
+  #      request-logging = true;
+  #      standard-logging = true;
+  #      reverse-proxy = true;
+  #      scope = "openid profile email groups";
+  #      provider-display-name = "Vedenemo Auth";
+  #      custom-sign-in-logo = "-";
+  #      client-secret-file = config.sops.secrets.oauth2_proxy_client_secret.path;
+  #      whitelist-domain = "10.161.5.196";
+  #    };
+  #    keyFile = config.sops.templates.oauth2_proxy_env.path;
+  #  };
+
+  #  services.nebula.networks.mesh = {
+  #    enable = true;
+  #    isLighthouse = false;
+  #    lighthouses = [ "91.99.96.123" ];
+  #    settings = {
+  #        cipher= "aes";
+  #        };
+  #    cert = "/etc/nebula/host.crt";
+  #    key = "/etc/nebula/host.key";
+  #    ca = "/etc/nebula/ca.crt";
+  #    staticHostMap = {
+  #        "10.161.5.196" = [
+  #                "91.99.96.123:4242"
+  #                ];
+  #        };
+  #    firewall.outbound = [
+  #    {
+  #    host = "any";
+  #    port = "any";
+  #    proto = "any";
+  #    }
+  #   ];
+  #    firewall.inbound = [
+  #    {
+  #    host = "any";
+  #    port = "any";
+  #    proto = "any";
+  #    }
+  #  ];
+  # };
 }

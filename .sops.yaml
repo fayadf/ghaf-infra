@@ -194,3 +194,8 @@ creation_rules:
       - *cazfi
       - *flokli
       - *ktu
+  - path_regex: hosts/uae-lab-node1/secrets.yaml$
+    key_groups:
+    - age:
+      - *fayad
+      - *jrautiola
