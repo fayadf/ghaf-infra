@@ -63,6 +63,10 @@
     openssl
     nix-info
     nebula
+    kubectl
+    helm
+    argocd
+    k9s
   ];
 
   # RDP server configurations
