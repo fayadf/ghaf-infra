@@ -20,6 +20,7 @@
     service-openssh
     user-bmg
     user-fayad
+    user-farookh
     team-profilence
   ]);
 
