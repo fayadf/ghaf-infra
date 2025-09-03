@@ -2,18 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 {
   disko.devices.disk.disk1 = {
-    device = "/dev/disk/by-id/scsi-360022480c6b7d2c890b5a18cbd293346";
+    device = "/dev/disk/by-id/scsi-360022480376c8c12ced67e2c6ec484bf";
     type = "disk";
     content = {
       type = "gpt";
       partitions = {
         boot = {
-          name = "boot";
           type = "EF02";
           size = "1M";
         };
         ESP = {
-          name = "ESP";
           type = "EF00";
           size = "500M";
           content = {
@@ -23,12 +21,15 @@
           };
         };
         root = {
-          name = "root";
           size = "100%";
           content = {
             type = "filesystem";
             format = "ext4";
             mountpoint = "/";
+            extraArgs = [
+              "-L"
+              "nixos"
+            ];
           };
         };
       };
