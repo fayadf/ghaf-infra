@@ -3,12 +3,12 @@
 #
 # Profile to import for Azure VMs. Imports azure-common.nix from nixpkgs,
 # and configures cloud-init.
-{ modulesPath, pkgs, ... }:
+{ pkgs, ... }:
 let
   asGB = size: toString (size * 1024 * 1024 * 1024);
 in
 {
-  imports = [ "${modulesPath}/virtualisation/azure-config.nix" ];
+  #  imports = [ "${modulesPath}/virtualisation/azure-config.nix" ];
 
   nix = {
     settings = {

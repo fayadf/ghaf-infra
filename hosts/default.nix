@@ -69,6 +69,7 @@ in
     nixos-hetz86-1 = ./builders/hetz86-1/configuration.nix;
     nixos-hetz86-builder = ./builders/hetz86-builder/configuration.nix;
     nixos-uae-lab-node1 = ./uae-lab-node1/configuration.nix;
+    nixos-uae-vm1 = ./azure/uae-vm1/configuration.nix;
   };
 
   # Expose as flake.lib.mkNixOS.
@@ -110,6 +111,7 @@ in
           "hetz86-1"
           "hetz86-builder"
           "uae-lab-node1"
+          "uae-vm1"
         ]
     ))
     // {
