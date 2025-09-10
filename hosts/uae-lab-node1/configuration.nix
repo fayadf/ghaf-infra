@@ -42,6 +42,13 @@
   networking = {
     hostName = "uae-lab-node1";
     useDHCP = true;
+    hosts = {
+      "10.52.31.4" = [ "aks-uaenorth-dev-aic-profilence-730y5480.hcp.uaenorth.azmk8s.io" ];
+    };
+    nameservers = [
+      "10.161.10.11"
+      "10.161.10.12"
+    ];
   };
 
   boot = {

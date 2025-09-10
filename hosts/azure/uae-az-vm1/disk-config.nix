@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2022-2024 TII (SSRC) and the Ghaf contributors
 # SPDX-License-Identifier: Apache-2.0
 {
-  disko.devices.disk.disk1 = {
-    device = "/dev/disk/by-id/scsi-360022480376c8c12ced67e2c6ec484bf";
+  disko.devices.disk.os = {
+    device = "/dev/disk/by-id/scsi-36002248072fbc121f8b1861953842505";
     type = "disk";
     content = {
       type = "gpt";
@@ -13,7 +13,7 @@
         };
         ESP = {
           type = "EF00";
-          size = "500M";
+          size = "256M";
           content = {
             type = "filesystem";
             format = "vfat";
@@ -26,10 +26,6 @@
             type = "filesystem";
             format = "ext4";
             mountpoint = "/";
-            extraArgs = [
-              "-L"
-              "nixos"
-            ];
           };
         };
       };

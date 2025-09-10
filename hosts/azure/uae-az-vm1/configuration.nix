@@ -11,16 +11,16 @@
 {
   imports = [
     ./disk-config.nix
-    ../../azure-common.nix
+    ./uae-az-vm.nix
     (modulesPath + "/profiles/qemu-guest.nix")
-    (modulesPath + "/installer/scan/not-detected.nix")
-    inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
   ]
   ++ (with self.nixosModules; [
     common
     service-openssh
     user-fayad
+    team-devenv
+    user-bmg
   ]);
 
   # this server has been installed with 24.05
@@ -29,34 +29,28 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   hardware.enableRedistributableFirmware = true;
 
-  #  sops = {
-  #    defaultSopsFile = ./secrets.yaml;
-  #    secrets = {
-  #      loki_password.owner = "promtail";
-  #    };
-  #  };
-
   networking = {
-    hostName = "ghaf-infra-vm1";
+    hostName = "uae-az-vm1";
   };
 
   boot = {
     # use predictable network interface names (eth0)
-    # kernelParams = [ "net.ifnames=0" ];
+    kernelParams = [ "net.ifnames=0" ];
     loader.grub = {
       efiSupport = true;
       efiInstallAsRemovable = true;
     };
-    initrd.systemd.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
     screen
     tmux
+    cryptsetup
+    sg3_utils
+    dnsutils
+    inetutils
+    pciutils
+    dmidecode
+    jq
   ];
-
-  nix.settings = {
-    experimental-features = "nix-command flakes";
-    auto-optimise-store = true;
-  };
 }
