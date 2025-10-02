@@ -71,6 +71,7 @@ in
     nixos-uae-lab-node1 = ./uae-lab-node1/configuration.nix;
     nixos-uae-az-vm1 = ./azure/uae-az-vm1/configuration.nix;
     nixos-uae-aws-vm2 = ./uae-aws-vm2/configuration.nix;
+    nixos-uae-az-lighthouse = ./azure/uae-az-lighthouse/configuration.nix;
   };
 
   # Expose as flake.lib.mkNixOS.
@@ -114,6 +115,7 @@ in
           "uae-lab-node1"
           "uae-az-vm1"
           "uae-aws-vm2"
+          "uae-az-lighthouse"
         ]
     ))
     // {
