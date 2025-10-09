@@ -90,7 +90,12 @@
   };
 
   uae-lab-node1 = {
-    ip = "10.161.5.196";
+    ip = "172.19.16.37";
+    nebula_ip = "10.42.42.33";
+  };
+
+  uae-lab-node2 = {
+    ip = "172.19.16.84";
   };
 
   uae-az-vm1 = {
@@ -101,4 +106,10 @@
     ip = "20.233.249.210";
   };
 
+  ghaf-lighthouse = {
+    ip = "65.109.141.136";
+    internal_ip = "10.0.0.10";
+    nebula_ip = "10.42.42.1";
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG9dKZmXqN8in6/0jglv+/txjWRkRJkPOUSVUGTx6KaG";
+  };
 }

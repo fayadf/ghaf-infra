@@ -69,6 +69,7 @@ in
     nixos-hetz86-1 = ./builders/hetz86-1/configuration.nix;
     nixos-hetz86-builder = ./builders/hetz86-builder/configuration.nix;
     nixos-uae-lab-node1 = ./uae-lab-node1/configuration.nix;
+    nixos-uae-lab-node2 = ./uae-lab-node2/configuration.nix;
     nixos-uae-az-vm1 = ./azure/uae-az-vm1/configuration.nix;
     nixos-uae-aws-vm2 = ./uae-aws-vm2/configuration.nix;
     nixos-uae-az-lighthouse = ./azure/uae-az-lighthouse/configuration.nix;
@@ -113,6 +114,7 @@ in
           "hetz86-1"
           "hetz86-builder"
           "uae-lab-node1"
+          "uae-lab-node2"
           "uae-az-vm1"
           "uae-aws-vm2"
           "uae-az-lighthouse"
