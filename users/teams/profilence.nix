@@ -4,5 +4,6 @@
   imports = [
     ../mikkok.nix
     ../tomil.nix
+    ../mikam.nix
   ];
 }
