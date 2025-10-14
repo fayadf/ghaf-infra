@@ -3,12 +3,16 @@ SPDX-FileCopyrightText: 2022-2024 TII (SSRC) and the Ghaf contributors
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-# Nethsm Gateway
+# Signing
+
+![diagram](./signing-setup.png)
 
 ## Softhsm usage
 
 Manual steps of how the softhsm is used. This can be automated with scripts in
 the future.
+
+All commands should be ran on the nethsm-gateway server.
 
 ### Creating softhsm signing keys
 
@@ -108,11 +112,49 @@ pkcs11-tool --module $SOFTHSM2_MODULE -p $PIN --slot $SLOT \
             --read-object --type pubkey --label DB-key -o $KEYDIR/db.der
 ```
 
-### Signing EFI file using sbsign
+## PKCS11 proxy
+
+`nethsm-gateway` runs a daemon provided by
+[pkcs11-proxy](https://github.com/scobiej/pkcs11-proxy/tree/osx-openssl1-1).
+
+This daemon is listening on tls port 2345, accessible through the nebula tunnel
+from the hetzner CI. A library provided by the same project can be used as the
+pkcs11 module, which will proxy the requests to the correct place (configured
+through environment variables).
+
+The requests are encrypted with a PKS key which comes from the host secrets.
+
+Substitute the variables in the following commands (except
+`PKCS11_PROXY_MODULE`, that one is populated on the system) with values from the
+softhsm setup earlier.
+
+### Signing and verifying using cosign
+
+Given an arbitrary file `hello`, and signing key `SLSA-key` with both private
+and public keys on the HSM (creation left as exercise for the reader):
+
+```sh
+cosign sign-blob --yes \
+    --key "pkcs11:token=$TOKEN;slot-id=$SLOT;object=SLSA-key;pin-value=$PIN?module-path=$PKCS11_PROXY_MODULE" \
+    --output-file hello.sig \
+    hello
+```
+
+Now you have hello and hello.sig files. Verify the signature like so:
+
+```sh
+cosign verify-blob \
+    --key "pkcs11:token=$TOKEN;slot-id=$SLOT;object=SLSA-key;type=pubkey;pin-value=$PIN?module-path=$PKCS11_PROXY_MODULE" \
+    --signature hello.sig \
+    hello
+```
+
+### UEFI Signing
 
 Sign your EFI bootloader using private key and certificate stored on the
 softhsm. `systemd-sbsign` can use the openssl pkcs11 provider to pull those
-objects.
+objects. When the pkcs11-provider is configured to use the pkcs11-proxy module,
+this integration is seamless.
 
 ```sh
 systemd-sbsign sign \
