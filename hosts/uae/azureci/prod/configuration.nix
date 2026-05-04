@@ -40,6 +40,7 @@
         "ghaf-nightly"
       ];
       withCachix = false;
+      withRegistryPublish = true;
     };
     auth = {
       clientID = "azureci-prod";
