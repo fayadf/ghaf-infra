@@ -38,6 +38,7 @@
         "ghaf-main"
         "ghaf-manual"
         "ghaf-nightly"
+        "g4h-manual"
       ];
       withCachix = false;
       withRegistryPublish = true;
