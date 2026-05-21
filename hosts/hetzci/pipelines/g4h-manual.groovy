@@ -53,11 +53,11 @@ pipeline {
             def TARGETS = []
             if (params.nvidia_jetson_orin_agx_debug) {
               TARGETS.push(
-                [ target: "packages.aarch64-linux.nvidia-jetson-orin-agx-debug", uefisign: params.UEFISIGN, testset: params.TESTSET, testagent_host: "dev" ])
+                [ target: "packages.aarch64-linux.nvidia-jetson-orin-agx-debug", uefisign: params.UEFISIGN, testset: params.TESTSET, testagent_host: params.TESTAGENT_HOST ])
             }
             if (params.nvidia_jetson_orin_nx_debug) {
               TARGETS.push(
-                [ target: "packages.aarch64-linux.nvidia-jetson-orin-nx-debug", uefisign: params.UEFISIGN, testset: params.TESTSET, testagent_host: "dev" ])
+                [ target: "packages.aarch64-linux.nvidia-jetson-orin-nx-debug", uefisign: params.UEFISIGN, testset: params.TESTSET, testagent_host: params.TESTAGENT_HOST ])
             }
 
             PIPELINE = utils.create_pipeline(TARGETS)

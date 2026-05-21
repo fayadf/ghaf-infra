@@ -264,7 +264,6 @@ creation_rules:
       - *hetzci-dbg
       - *hetzci-prod
       - *hetzci-release
-      - *uae-lab-node1
       - *uae-nethsm-gateway
       - *uae-azureci-prod
       - *uae-testagent-prod
