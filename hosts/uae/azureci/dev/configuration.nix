@@ -50,4 +50,14 @@
   services.jenkins.environment = {
     OCI_REGISTRY = "registry.uaenorth.cloudapp.azure.com";
   };
+
+  # users used by testagents to ssh in and collect their secret
+  users.users = {
+    g4h-testagent-dev = {
+      isNormalUser = true;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEMJgpvyU7j/XQ1OT596m6kKvkK4EGKiwhi6liPy5rxD"
+      ];
+    };
+  };
 }
