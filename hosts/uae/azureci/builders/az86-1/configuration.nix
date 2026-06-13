@@ -48,15 +48,6 @@ in
     hostName = "uae-azureci-az86-1";
   };
 
-  boot = {
-    # use predictable network interface names (eth0)
-    kernelParams = [ "net.ifnames=0" ];
-    loader.grub = {
-      efiSupport = true;
-      efiInstallAsRemovable = true;
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     screen
     tmux
