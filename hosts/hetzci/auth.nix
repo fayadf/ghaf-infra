@@ -86,11 +86,30 @@ in
           }
 
           # Route /artifacts requests to caddy file_server
-          handle_path /artifacts* {
-            root * /var/lib/jenkins/artifacts
-            file_server {
-              browse
+          handle /artifacts* {
+            forward_auth localhost:4180 {
+              uri /oauth2/auth
+
+              # oauth2-proxy requires the X-Real-IP and X-Forwarded-{Proto,Host,Uri} headers.
+              # The forward_auth directive automatically sets the X-Forwarded-{For,Proto,Host,Method,Uri} headers.
+              header_up X-Real-IP {remote_host}
+
+              copy_headers {
+                X-Auth-Request-User>X-Forwarded-User
+                X-Auth-Request-Groups>X-Forwarded-Groups
+                X-Auth-Request-Email>X-Forwarded-Mail
+                X-Auth-Request-Preferred-Username>X-Forwarded-DisplayName
+              }
+
+              # If oauth2-proxy returns a 401 status, redirect the client to the sign-in page.
+              @error status 401
+              handle_response @error {
+                redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+              }
             }
+
+            root * /var/lib/jenkins
+            file_server browse
           }
 
           @unauthenticated {
