@@ -12,6 +12,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disk-config.nix
+    ../../minio.nix
     (modulesPath + "/profiles/qemu-guest.nix")
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
