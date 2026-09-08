@@ -10,9 +10,9 @@
 }:
 {
   imports = [
-    ../../../testagent/agents-common.nix
     ../uae.nix
     ./disk-config.nix
+    ../../../testagent/agents-common.nix
     (modulesPath + "/profiles/qemu-guest.nix")
     inputs.disko.nixosModules.disko
   ]
