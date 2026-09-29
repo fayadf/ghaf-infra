@@ -26,7 +26,10 @@ let
       retention = {
         policies = [
           {
-            repositories = [ "ghaf/**" ];
+            repositories = [
+              "ghaf/**"
+              "humanoid/**"
+            ];
             deleteReferrers = true;
             deleteUntagged = true;
             keepTags = [
@@ -34,6 +37,7 @@ let
                 patterns = [
                   ".*-latest"
                   "ghaf-.*"
+                  "humanoid-.*"
                 ];
               }
               {
@@ -119,6 +123,21 @@ let
               "delete"
             ];
             anonymousPolicy = [ "read" ];
+          };
+          "humanoid/**" = {
+            policies = [
+              {
+                users = [ "jenkins" ];
+                actions = [
+                  "read"
+                  "create"
+                  "update"
+                  "delete"
+                ];
+              }
+            ];
+            defaultPolicy = [ "read" ];
+            anonymousPolicy = [ ];
           };
         };
       }
