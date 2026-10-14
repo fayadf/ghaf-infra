@@ -62,7 +62,7 @@
 
     # Lenovo X1 Secure Boot
     # SSD-drive
-    SUBSYSTEM=="block", KERNEL=="sd[a-z]", ENV{ID_SERIAL_SHORT}=="20D11E8071DF", SYMLINK+="ssdSecBoot", MODE="0666", GROUP="dialout"
+    SUBSYSTEM=="block", KERNEL=="sd[a-z]", ENV{ID_SERIAL_SHORT}=="Z84FTI67T", SYMLINK+="ssdSecBoot", MODE="0666", GROUP="dialout"
 
     # Bluetooth Board
     SUBSYSTEM=="tty", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="1061", ATTRS{serial}=="001050290059", ENV{ID_USB_INTERFACE_NUM}=="00", SYMLINK+="ttyBTboard", MODE="0666", GROUP="dialout"
