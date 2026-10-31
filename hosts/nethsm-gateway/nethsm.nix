@@ -24,6 +24,7 @@ let
   };
 
   nethsm-operator-username = "ghafsign~ghafsigner";
+  nethsm-admin-username = "ghafsign~admin";
 
   nethsm-cmd = pkgs.writeShellScriptBin "nethsm-cmd" ''
     nitropy nethsm --no-verify-tls \
@@ -120,6 +121,10 @@ in
         group = "wheel";
         mode = "0440";
       };
+      nethsm-admin-password = {
+        group = "wheel";
+        mode = "0440";
+      };
       yubihsm-pin = {
         group = "wheel";
         mode = "0440";
@@ -173,6 +178,10 @@ in
               operator:
                 username: ${nethsm-operator-username}
                 password: ${config.sops.placeholder.nethsm-operator-password}
+
+              administrator:
+                username: ${nethsm-admin-username}
+                password: ${config.sops.placeholder.nethsm-admin-password}
 
               instances:
                 - url: https://${config.nethsm.host}/api/v1
